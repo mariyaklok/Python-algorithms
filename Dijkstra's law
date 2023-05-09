@@ -1,0 +1,92 @@
+'''Dijkstra's Law'''
+from collections import defaultdict
+
+
+class Graph:
+    def __init__(self,directed=False):
+        self.graph = defaultdict(list)
+        self.directed=directed
+      
+
+    def add_edge(self, v, w, weight):
+        self.graph[v].append([w, weight])
+
+        if self.directed is False:
+            self.graph[w].append([v, weight])
+        else:
+            self.graph[w] = self.graph[w]
+
+    def find_min(self, distance, visited):
+        minimum = float('inf') #intialising to infinity 
+        index = -2
+        for y in self.graph.keys():
+            if visited[y] is False and distance[y] < minimum:
+                minimum = distance[y]
+                index = y
+
+        return index
+
+    def dijkstra(self, origin):
+        visited = {k: False for k in self.graph}
+        distance = {k: float('inf') for k in self.graph}
+        root = {k: None for k in self.graph}
+
+        # set the distance of origin to itself as 0
+        distance[origin] = 0
+
+        # find shortest path for all vertices
+        for i in range(len(self.graph)-1):
+            # find minimum distance to vertex from origin
+            l = self.find_min(distance, visited)
+
+            # mark the node as visited
+            visited[l] = True
+            # check if the distance through current edge is less than previously known distance to x
+            for x, z in self.graph[l]:
+
+                if visited[x] is False and distance[l] + z < distance[x]:
+                    distance[x] = distance[l] + z
+                    root[x] = l
+        # return root list and distance to each node from origin
+        return root, distance
+
+    def print_path(self, root, x):
+        if root[x] is None:
+            return
+        self.print_path(root, root[x])
+        print(x,end=' ')
+
+    def print_dijkstra(self, distance, root, origin):
+        print('{}\t{}\t{}'.format('Vertex', '      Distance', '         Path'))
+
+        for i in self.graph.keys():
+            if i == origin:
+                continue
+            print('{} -> {}\t\t{}\t\t{}'.format(origin, i, distance[i], origin), end=' ')
+            self.print_path(root,i)
+            print()
+
+if __name__ == '__main__':
+   
+    graph = Graph()
+
+    graph.add_edge(0, 1, 4)
+    graph.add_edge(0, 7, 8)
+    graph.add_edge(1, 2, 8)
+    graph.add_edge(1, 7, 11)
+    graph.add_edge(7, 6, 1)
+    graph.add_edge(7, 8, 7)
+    graph.add_edge(6, 8, 6)
+    graph.add_edge(6, 5, 2)
+    graph.add_edge(8, 2, 2)
+    graph.add_edge(2, 3, 7)
+    graph.add_edge(2, 5, 4)
+    graph.add_edge(3, 4, 9)
+    graph.add_edge(3, 5, 14)
+    graph.add_edge(5, 4, 10)
+
+    root, distance = graph.dijkstra(0)
+
+    graph.print_dijkstra(distance, root, 0)
+
+

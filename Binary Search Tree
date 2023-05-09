@@ -1,0 +1,168 @@
+'''Create binary search tree and implementing search and delete functions'''
+
+class BinTreeNode(object):
+    #implementing the tree
+    def __init__(self, value):
+        self.value=value
+        self.leftChild=None
+        self.rightChild=None
+
+def t_insert(curr_node,value):
+        if (curr_node==None):
+            #creating node 
+            curr_node=BinTreeNode(value)
+        else:
+            if value<curr_node.value:
+                if (curr_node.leftChild!=None):
+                    t_insert(curr_node.leftChild,value)
+                else:
+                    curr_node.leftChild=BinTreeNode(value)
+            else:
+                if(curr_node.rightChild!=None):
+                    t_insert(curr_node.rightChild,value)
+                else:
+                    curr_node.rightChild=BinTreeNode(value)
+        return curr_node
+    
+def preorder(curr_node):
+    print (curr_node.value)
+    if (curr_node.leftChild!=None):
+        preorder(curr_node.leftChild)
+    if (curr_node.rightChild!=None):
+        preorder(curr_node.rightChild)
+        
+def postorder(curr_node):
+    if(curr_node.leftChild!=None):
+        postorder(curr_node.left)
+    if(curr_node.rightChild!=None):
+        postorder(curr_node.right)
+    print (curr_node.value)
+ 
+ 
+def in_order(curr_node):
+    if(curr_node.leftChild!=None):
+        in_order(curr_node.leftChild)
+    print (curr_node.value)
+    if(curr_node.rightChild!=None):
+        in_order(curr_node.rightChild)
+
+def find_tree(curr_node,value):
+    if(curr_node.value==value):
+        return True
+        print(curr_node.value)
+        
+    else:
+        #if value is less than the tree value search in left branch recusively until found
+        if(value<curr_node.value):
+            print(curr_node.value)
+            if(curr_node.leftChild!=None):
+                find_tree(curr_node.leftChild,value)
+                print("Word found!")
+            else:
+                print("Word not found!")
+        else:
+            #if value is more than the tree value search in right branch recusively until found
+            print(curr_node.value)
+            if(curr_node.rightChild!=None):
+                find_tree(curr_node.rightChild,value)
+#                 print("Word found!")
+            else:
+                print("word not found!")
+    return curr_node        
+
+def frequencies():
+    file = open(r"paragraph.txt", "r", encoding="utf-8-sig") 
+    from collections import Counter 
+    #counting the words in the text file 
+    wordcount = Counter(file.read().split(" ")) 
+    for item in wordcount.items(): 
+        print("{}\t{}".format(*item))
+        
+def minimum_value(curr_node):
+        recent = curr_node
+        #looping down to find the left most leaf
+        while(recent.leftChild is not None):
+            recent = recent.leftChild
+
+        return recent
+    
+def remove_node(curr_node, value):
+        if curr_node is None:
+            #when there is no value
+             return None
+
+         #searching the element 
+        if value < curr_node.value:
+            curr_node.leftChild = remove_node(curr_node.leftChild,value) 
+        elif value > curr_node.value:
+            curr_node.rightChild = remove_node(curr_node.rightChild,value) 
+        else:
+            # deleting node with one child
+            if curr_node.leftChild is None:
+                interim = curr_node.rightChild
+                curr_node = None
+                return interim
+            elif curr_node.rightChild is None:   
+                interim = curr_node.leftChild
+                curr_node = None
+                return interim
+            else:
+                # deleting node with two children
+                interim = minimum_value(curr_node.rightChild)
+                curr_node.value = interim.value
+                curr_node.rightChild = remove_node(curr_node.rightChild,curr_node.value)
+        return curr_node
+
+                                        
+if __name__ == '__main__':
+
+   
+#     file=open("paragraph.txt","w")
+#     file.write("Physics after all is supposed to be a cerebral pursuit But this cavern almost measureless to the eye stuffed as it is with an Eiffel Towers worth of metal eight-story wheels of gold fan-shape boxes thousands of miles of wire and fat ductlike coils echoes with the shriek of power tools the whine of pumps and cranes beeps and clanks from wrenches hammers screwdrivers and the occasional falling bolt It seems no place for the studious")
+ 
+#     file=open("paragraph.txt","r")
+#     print(file.read())
+  
+  text=[] 
+  TreeVar=t_insert(None," ");
+file=open("paragraph.txt","r"); #opening file to store a paragraph
+text = file.read().lower().split(" ") #reading the file and splitting the paragraph
+for i in text:
+    t_insert(TreeVar,i) #inserting the words in tree
+file.close()
+
+
+ans=True
+while ans:
+    print("""
+    1.Press 1. To print paragraph
+    1.Press 2. To preorder the tree
+    2.Press 3. To inorder the tree
+    3.Press 4. To find a word in the tree
+    4.Press 5. To find the frequencies of the words in the paragraph
+    5.Press 6. To remove a node from the tree
+    6.Press 7. To exit or type "exit" to exit 
+    """)
+    ans=input("What would you like to do? ")
+    if ans=="1":
+        file=open("paragraph.txt","r")
+        print(file.read())
+    elif ans=="2":
+        preorder(TreeVar)
+    elif ans=="3":
+        in_order(TreeVar)
+    elif ans=="4":
+        r=input("Enter word to find!: ")
+        find_tree(TreeVar,r)
+    elif ans=="5":
+        frequencies()
+    elif ans=="6":
+        z=input("Enter word to delete: ")
+        remove_node(TreeVar,z)
+        in_order(TreeVar)
+    elif ans=="7" or ans=="exit":
+        print("Goodbye!")   
+        break
+    else:
+        print("\n Not Valid Choice Try again")
+        

@@ -1,0 +1,121 @@
+'''Implementing bfs , dfs , path and connection functions '''
+
+class graph:
+    
+    def __init__(self):
+        vertices={}
+        self.vertices=vertices
+   
+    def isConnected(self):
+        ''' To check if the graph is strongly connected'''
+        Connected = True
+        for i in self.vertices:
+             for j in self.vertices:
+                if i != j:
+                    Connected = isPath(i, j)
+                    
+        if Connected:
+            return 'YES'
+        else:
+            return 'NO'
+
+''''Funtion to find path between 2 nodes'''
+def isPath(graph,v,w):
+    stack = [(v, [v])]
+    while stack:
+        (vertex1, path) = stack.pop()
+        for next in graph[vertex1] - set(path):
+            if next == w:
+                yield path + [next] #getting the path 
+#                 print(path + [next])
+            else:
+                stack.append((next, path + [next]))
+
+'''DFS traversal of the graph produces the minimum spanning side and all pair shortest path side'''
+def dfs_traversal(graph, startapex, visited = None):
+    if visited is None:
+        visited =set()
+    visited.add(startapex)
+#     print(startnode)
+    for apex in graph[startapex] - visited:
+        dfs_traversal(graph, apex, visited)
+    return visited
+
+import collections
+''' Breadth first traversal is an algorithm for 
+    searching all the vertices of a graph.'''
+def bfs_traversal(graph, startapex):
+        visited, queue = set([startapex]), collections.deque([startapex])
+        while queue:
+            vertex = queue.popleft()
+            label(vertex)
+            for apex in graph[vertex]:
+                if apex not in visited:
+                    visited.add(apex)
+                    print(apex)
+                    queue.append(apex)
+
+def label(p):
+    print(p)
+
+    
+    
+if __name__ == '__main__':
+    vertices ={'1':set(['2', '3']),
+               '2': set(['1', '5', '6']),
+               '3': set(['2', '4']),
+               '4': set(['3']),
+               '5': set(['2', '6']),
+               '6': set(['2', '5'])}
+
+    
+ans=True
+while ans:
+    print("""
+    1.Press 1. To do DFS
+    2.Press 2. To do BFS
+    3.Press 3. To find path between 2 nodes
+    4.Press 4. To check if the graph is strongly connected
+    3.Press 5. To exit or type "exit" to exit
+    """)
+    ans=input("What would you like to do? ")
+    if ans=="1":
+        file=open("dfs.txt","w")
+        startvertex1=(input("Enter starting node: "))
+        file.write(str(dfs_traversal(vertices,startvertex1)))
+        file.close()
+
+
+        file=open("dfs.txt","r")
+        print(file.read())
+        
+    elif ans=="2":
+         file1=open("bfs.txt","w")
+         startvertex=(input("Enter starting node: "))
+         file1.write(str(bfs_traversal(vertices,startvertex)))
+         file1.close()
+
+         file1=open("bfs.txt","r")
+         print(file1.read())
+    
+    elif ans=="3":
+        file=open("path.txt","w")
+        v=input("Enter vertex one: ")
+        w=input("Enter vertex two: ")
+        file.write(str(list(isPath(vertices,v,w))))
+        file.close()
+
+        file=open("path.txt","r")
+        print(file.read())
+
+        
+    elif ans=="4":
+        g=graph()
+        print(g.isConnected())
+        
+    elif ans=="5" or ans=="exit":
+        print("Goodbye!")   
+        break
+    else:
+        print("\n Not a Valid Choice Try again")
+        

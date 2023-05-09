@@ -1,0 +1,80 @@
+'''Creating an unweighted graph'''
+
+class vertex:
+    def __init__(self,apex):
+        self.n=apex
+        self.adjacentNeighbour=list()
+        
+    def add_neighbour(self,A):
+        if A not in self.adjacentNeighbour:
+            self.adjacentNeighbour.append(A)
+            self.adjacentNeighbour.sort()
+            
+        else:
+            return False
+        
+class graph:
+    
+    vertices={}
+    
+    def add_vertex(self, vertex1):
+        #isinstance function checks if the object is an instance or subclass of classinfo class
+        if isinstance(vertex1, vertex):
+            if vertex1.n not in self.vertices:
+                 self.vertices[vertex1.n] = vertex1
+            return True
+        else:
+            return False
+	
+    def add_edges(self,v,w):
+        if v in self.vertices and w in self.vertices:
+            
+            self.vertices[v].add_neighbour(w)
+            self.vertices[w].add_neighbour(v)
+            
+        else:
+            return False
+        
+
+    def print_graph(self):
+        for k in sorted(list(self.vertices.keys())):
+            print(k + str(self.vertices[k].adjacentNeighbour))
+            
+            
+if __name__ == '__main__':
+    
+    g = graph()
+    a = vertex('2')
+    g.add_vertex(a)
+    g.add_vertex(vertex('0'))
+    g.add_vertex(vertex('1'))
+    g.add_vertex(vertex('2'))
+    g.add_vertex(vertex('3'))
+    g.add_vertex(vertex('4'))
+    g.add_vertex(vertex('5'))
+    g.add_vertex(vertex('6'))
+    g.add_vertex(vertex('7'))
+    g.add_vertex(vertex('8'))
+   
+    g.add_edges('0', '1')
+    g.add_edges('0', '7')
+    g.add_edges('1', '2')
+    g.add_edges('1', '7')
+    g.add_edges('7', '6')
+    g.add_edges('7', '8')
+    g.add_edges('6', '8')
+    g.add_edges('6', '5')
+    g.add_edges('8', '2')
+    g.add_edges('2', '3')
+    g.add_edges('2', '5')
+    g.add_edges('3', '4')
+    g.add_edges('3', '5')
+    g.add_edges('5', '4')
+                   
+
+
+#     edge = ['24','26','46','108','68',
+#     for edges in edge:
+#         g.add_edges(edges[:1], edges[1:])
+
+    g.print_graph()
